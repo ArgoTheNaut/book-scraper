@@ -9,7 +9,7 @@ To run, edit the CSV with the books you're interested in and then run the follow
 .\get-lengthData.ps1
 ```
 The result should look like this
-![A demonstration of the output when the script is run.  A table of PSCustomObjects is shown providing the data for each book in the table. Fields printed for each entry are: pageCount, wordCount, duration_mins, author, title](./doc/sample_run.png)
+![A demonstration of the output when the script is run.  A table of PSCustomObjects is shown providing the data for each book in the table. Fields printed for each entry are: pageCount, wordCount, duration_mins, author, title](./doc/sample_run.PNG)
 
 Note that this tool currently misses on some matches and can be further refined.
 
