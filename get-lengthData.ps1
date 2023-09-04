@@ -1,3 +1,17 @@
+$headers = @{
+    "Accept"             = "application/json, text/plain, */*"
+    "Accept-Encoding"    = "gzip, deflate, br"
+    "Accept-Language"    = "en-US,en;q=0.9"
+    "Origin"             = "https://howlongtoread.com"
+    "Referer"            = "https://howlongtoread.com/"
+    "Sec-Fetch-Dest"     = "empty"
+    "Sec-Fetch-Mode"     = "cors"
+    "Sec-Fetch-Site"     = "same-site"
+    "sec-ch-ua"          = "`"Chromium`";v=`"116`", `"Not)A;Brand`";v=`"24`", `"Google Chrome`";v=`"116`""
+    "sec-ch-ua-mobile"   = "?0"
+    "sec-ch-ua-platform" = "`"Windows`""
+}
+
 Function get-bookData {
     param(
         $auth,
@@ -6,20 +20,7 @@ Function get-bookData {
 
     $path = [uri]::EscapeDataString("$auth $title")
 
-    $r = Invoke-WebRequest -UseBasicParsing -Uri "https://api.howlongtoread.com/books/search/$path" `
-        -Headers @{
-        "Accept"             = "application/json, text/plain, */*"
-        "Accept-Encoding"    = "gzip, deflate, br"
-        "Accept-Language"    = "en-US,en;q=0.9"
-        "Origin"             = "https://howlongtoread.com"
-        "Referer"            = "https://howlongtoread.com/"
-        "Sec-Fetch-Dest"     = "empty"
-        "Sec-Fetch-Mode"     = "cors"
-        "Sec-Fetch-Site"     = "same-site"
-        "sec-ch-ua"          = "`"Chromium`";v=`"116`", `"Not)A;Brand`";v=`"24`", `"Google Chrome`";v=`"116`""
-        "sec-ch-ua-mobile"   = "?0"
-        "sec-ch-ua-platform" = "`"Windows`""
-    }
+    $r = Invoke-WebRequest -UseBasicParsing -Uri "https://api.howlongtoread.com/books/search/$path" -Headers $headers
 
     $closeMatches = $r.Content | ConvertFrom-Json  # | Where-Object { $_.title -like "*$title*" }
 
@@ -35,23 +36,7 @@ Function get-bookData {
         return
     }
 
-
-
-    $q = Invoke-WebRequest -UseBasicParsing -Uri "https://api.howlongtoread.com/books/id/$id" `
-        -Headers @{
-        "Accept"             = "application/json, text/plain, */*"
-        "Accept-Encoding"    = "gzip, deflate, br"
-        "Accept-Language"    = "en-US,en;q=0.9"
-        "Origin"             = "https://howlongtoread.com"
-        "Referer"            = "https://howlongtoread.com/"
-        "Sec-Fetch-Dest"     = "empty"
-        "Sec-Fetch-Mode"     = "cors"
-        "Sec-Fetch-Site"     = "same-site"
-        "sec-ch-ua"          = "`"Chromium`";v=`"116`", `"Not)A;Brand`";v=`"24`", `"Google Chrome`";v=`"116`""
-        "sec-ch-ua-mobile"   = "?0"
-        "sec-ch-ua-platform" = "`"Windows`""
-    }
-
+    $q = Invoke-WebRequest -UseBasicParsing -Uri "https://api.howlongtoread.com/books/id/$id" -Headers $headers
     $bookData = $q.Content | ConvertFrom-Json
 
     [PSCustomObject]@{
