@@ -1,3 +1,10 @@
+<#
+    .SYNOPSIS
+        Pulls in page count, word count, and reading time duration information for a collection of books defined in a CSV
+#>
+
+param($bookListSource = "$PSScriptRoot\sample_list.csv")
+
 $headers = @{
     "Accept"             = "application/json, text/plain, */*"
     "Accept-Encoding"    = "gzip, deflate, br"
@@ -48,4 +55,4 @@ Function get-bookData {
     }
 }
 
-Import-Csv "$PSScriptRoot\sample_list.csv" | ForEach-Object { get-bookData -auth $_.auth -title $_.title } | Format-Table
+Import-Csv $bookListSource | ForEach-Object { get-bookData -auth $_.auth -title $_.title } | Format-Table
