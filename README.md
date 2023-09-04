@@ -12,3 +12,5 @@ The result should look like this
 ![A demonstration of the output when the script is run.  A table of PSCustomObjects is shown providing the data for each book in the table. Fields printed for each entry are: pageCount, wordCount, duration_mins, author, title](./doc/sample_run.png)
 
 Note that this tool currently misses on some matches and can be further refined.
+
+Source data website: https://howlongtoread.com/
