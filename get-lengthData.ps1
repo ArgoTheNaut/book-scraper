@@ -6,7 +6,7 @@
     https://github.com/gravejester/Communary.PASM/blob/master/Functions/Get-RatcliffObershelpSimilarity.ps1
 #>
 
-param($bookListSource = "$PSScriptRoot\sample_list.csv")
+[CmdletBinding()]param($bookListSource = "$PSScriptRoot\sample_list.csv")
 
 $headers = @{
     "Accept"             = "application/json, text/plain, */*"
@@ -220,30 +220,23 @@ Function get-MatchesFor($auth, $title) {
 
     $searchResults = $r.Content | ConvertFrom-Json
 
-    Write-Host "Search for $path resulted in $($searchResults.length) results"
+    # Write-Host "Search for $path resulted in $($searchResults.length) results"
 
-    $searchResults | ForEach-Object {
+    $searchResults | Sort-Object {
         $a = "$auth $title"
         $b = "" + $_.author + " " + $_.title
         $c = Get-RatcliffObershelpSimilarity $a $b
-        [PSCustomObject]@{
-            "similarity" = $c
-            "Search"     = $a
-            "found"      = $b
-        }
-    }
+        $c
+    } -Descending
 }
 
 Function get-bookData {
-    param(
+    [CmdletBinding()]param(
         $auth,
         $title
     )
-
+    $i = 0
     $closeMatches = get-MatchesFor $auth $title
-
-    $closeMatches
-    exit
 
     $closest = @($closeMatches)[0]
 
@@ -253,13 +246,13 @@ Function get-bookData {
         # Write-Host "Going with the closest match: " $closest.author $closest.title "-- ID: $id"
     }
     else {
-        Write-Host "No close matches found for $path"
+        Write-Host "No close matches found for $auth $title"
         return
     }
 
-    if ($closest.numPages -lt 10) {
-        $closeMatches | ForEach-Object { Write-Host $_ }
-    }
+    # if ($closest.numPages -lt 10) {
+    #     $closeMatches | ForEach-Object { Write-Host $_ }
+    # }
 
     $q = Invoke-WebRequest -UseBasicParsing -Uri "https://api.howlongtoread.com/books/id/$id" -Headers $headers
     $bookData = $q.Content | ConvertFrom-Json
@@ -274,4 +267,4 @@ Function get-bookData {
     }
 }
 
-Import-Csv $bookListSource | ForEach-Object { get-bookData -auth $_.auth -title $_.title } #| Format-Table
+Import-Csv $bookListSource | ForEach-Object { get-bookData -auth $_.auth -title $_.title } | Format-Table
